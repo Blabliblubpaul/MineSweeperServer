@@ -3,7 +3,7 @@ import { Collection, Db, Document, MongoClient, ObjectId, WithId } from "mongodb
 /* DB-Format:
 {
     "highscores": [
-        "<highscore-collection-name>": [
+        "<signature>": [
             <score>,
             <score>,
             ...
@@ -11,7 +11,7 @@ import { Collection, Db, Document, MongoClient, ObjectId, WithId } from "mongodb
     ]
 }
 
-<highscore-collection-name>: w<board-width>h<board-height>m<mines>md<metal-detectors>hi<hint>
+<signature>: w<board-width>h<board-height>m<mines>md<metal-detectors>hi<hint>
 <score>: <completion-time-in-seconds>
 */
 
@@ -50,6 +50,10 @@ export default class DatabaseAccess {
         this.connected = true
     }
 
+    async getSignatures() {
+        return this.document.highscores.length
+    }
+
     async getHighscores(signature: string) {
         let highscores = this.document.highscores
 
@@ -59,11 +63,13 @@ export default class DatabaseAccess {
     async testHighscore(signature: string, highscore: number) {
         let highscores = await this.getHighscores(signature)
 
+        console.log("Testing score (" + highscore + ")...")
+
         if (!highscores || highscores.length === 0) {
             return true
         }
         else {
-            return Math.min(...highscores) < highscore
+            return Math.max(...highscores) > highscore
         }
     }
 

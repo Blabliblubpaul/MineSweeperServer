@@ -4,7 +4,7 @@ const mongodb_1 = require("mongodb");
 /* DB-Format:
 {
     "highscores": [
-        "<highscore-collection-name>": [
+        "<signature>": [
             <score>,
             <score>,
             ...
@@ -12,7 +12,7 @@ const mongodb_1 = require("mongodb");
     ]
 }
 
-<highscore-collection-name>: w<board-width>h<board-height>m<mines>md<metal-detectors>hi<hint>
+<signature>: w<board-width>h<board-height>m<mines>md<metal-detectors>hi<hint>
 <score>: <completion-time-in-seconds>
 */
 // Mit .env Datei
@@ -43,17 +43,21 @@ class DatabaseAccess {
         }
         this.connected = true;
     }
+    async getSignatures() {
+        return this.document.highscores.length;
+    }
     async getHighscores(signature) {
         let highscores = this.document.highscores;
         return highscores ? highscores[signature] : undefined;
     }
     async testHighscore(signature, highscore) {
         let highscores = await this.getHighscores(signature);
+        console.log("Testing score (" + highscore + ")...");
         if (!highscores || highscores.length === 0) {
             return true;
         }
         else {
-            return Math.min(...highscores) < highscore;
+            return Math.max(...highscores) > highscore;
         }
     }
     async pushHighscore(signature, highscore) {
@@ -65,6 +69,7 @@ class DatabaseAccess {
         }
         this.document.highscores[signature] = highscores;
         await this.collection.updateOne({}, { $set: { ["highscores." + signature]: highscores } });
+        return await this.getHighscores(signature);
     }
 }
 exports.default = DatabaseAccess;
