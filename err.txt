@@ -1,0 +1,7 @@
+-ms-leaderboard (2)
+    -ms-leaderboard (1)
+        -schema
+        -validator (empty)
+        -indexes (1)
+            -_id_ (20.0KB)
+    -users
