@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = require("mongodb");
 /* DB-Format:
 {
-    "highscores": [
+    "highscores": {
         "<signature>": [
             <score>,
             <score>,
             ...
         ]
-    ]
+    }
 }
 
 <signature>: w<board-width>h<board-height>m<mines>md<metal-detectors>hi<hint>
@@ -44,7 +44,9 @@ class DatabaseAccess {
         this.connected = true;
     }
     async getSignatures() {
-        return this.document.highscores.length;
+        console.log(this.document.highscores);
+        console.log(Object.keys(this.document.highscores));
+        return Object.keys(this.document.highscores);
     }
     async getHighscores(signature) {
         let highscores = this.document.highscores;
@@ -53,7 +55,7 @@ class DatabaseAccess {
     async testHighscore(signature, highscore) {
         let highscores = await this.getHighscores(signature);
         console.log("Testing score (" + highscore + ")...");
-        if (!highscores || highscores.length === 0) {
+        if (!highscores || highscores.length < 10) {
             return true;
         }
         else {

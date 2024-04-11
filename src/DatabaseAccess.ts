@@ -2,13 +2,13 @@ import { Collection, Db, Document, MongoClient, ObjectId, WithId } from "mongodb
 
 /* DB-Format:
 {
-    "highscores": [
+    "highscores": {
         "<signature>": [
             <score>,
             <score>,
             ...
         ]
-    ]
+    }
 }
 
 <signature>: w<board-width>h<board-height>m<mines>md<metal-detectors>hi<hint>
@@ -51,7 +51,9 @@ export default class DatabaseAccess {
     }
 
     async getSignatures() {
-        return this.document.highscores.length
+        console.log(this.document.highscores)
+        console.log(Object.keys(this.document.highscores))
+        return Object.keys(this.document.highscores)
     }
 
     async getHighscores(signature: string) {
@@ -65,7 +67,7 @@ export default class DatabaseAccess {
 
         console.log("Testing score (" + highscore + ")...")
 
-        if (!highscores || highscores.length === 0) {
+        if (!highscores || highscores.length < 10) {
             return true
         }
         else {
