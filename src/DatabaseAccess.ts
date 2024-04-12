@@ -51,8 +51,6 @@ export default class DatabaseAccess {
     }
 
     async getSignatures() {
-        console.log(this.document.highscores)
-        console.log(Object.keys(this.document.highscores))
         return Object.keys(this.document.highscores)
     }
 

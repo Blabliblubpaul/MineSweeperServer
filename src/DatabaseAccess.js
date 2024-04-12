@@ -44,8 +44,6 @@ class DatabaseAccess {
         this.connected = true;
     }
     async getSignatures() {
-        console.log(this.document.highscores);
-        console.log(Object.keys(this.document.highscores));
         return Object.keys(this.document.highscores);
     }
     async getHighscores(signature) {
